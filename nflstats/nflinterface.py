@@ -23,7 +23,18 @@ def get_player():
     last_name = payload['last_name']
     first_name = payload['first_name']
     team = payload['team']
-    stats = nflanalyze.get_player(last_name, first_name, team)
+    player = nflanalyze.get_player(last_name, first_name, team)
+    if player == None:
+        return nflanalyze.to_json({'message': 'not found'})
+    return to_json(player)
+
+@app.route('/get_player_all_time_stats', methods=['POST'])
+def get_player_all_time_stats():
+    payload = json.loads(request.data)
+    last_name = payload['last_name']
+    first_name = payload['first_name']
+    team = payload['team']
+    stats = nflanalyze.get_player_all_time_stats(last_name, first_name, team)
     if stats == None:
         return nflanalyze.to_json({'message': 'not found'})
     return to_json(stats)

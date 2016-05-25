@@ -17,7 +17,7 @@ def test_app():
 def test_home(client):
     response = client.get('/', follow_redirects=True)
     print response.data
-    assert b'nflpredict' in response.data
+    assert b'nflstats' in response.data
 
 def test_get_player(client):
     payload = {

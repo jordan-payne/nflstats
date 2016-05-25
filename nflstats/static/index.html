@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app='nflpredict'>
+<html ng-app='nflstats'>
   <head>
       <link rel="stylesheet" href="bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css">
@@ -7,7 +7,11 @@
       <script src='angular.js'></script>
       <script src='ui-grid.min.js'></script>
       <script src='router.min.js'></script>
-      <script src='app.js'></script>
+      <script src='app.module.js'></script>
+      <script src='app.config.js'></script>
+      <script src='app.constants.js'></script>
+      <script src='roster/roster.controller.js'></script>
+      <script src='player_stats/playerstats.controller.js'></script>
   </head>
   <body>
     <div ui-view>
