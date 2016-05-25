@@ -30,6 +30,15 @@ def test_get_player(client):
     assert json_data['status'] == 'Active'
     assert json_data['full_name'] == 'Drew Brees'
 
+def test_get_player_all_time_stats(client):
+    payload = {
+        'last_name':'Manning',
+        'first_name':'Eli',
+        'team':'NYG'}
+    response = client.post('/get_player_all_time_stats', data=json.dumps(payload))
+    json_data = json.loads(response.data)
+    assert json_data['offense_tds'] == 207
+    
 def test_get_team_roster(client):
     payload = {
         'team': 'NO'

@@ -32,9 +32,18 @@ def test_get_player_all_time_stats():
     last_name = 'Manning'
     team = 'UNK'
     stats = nflanalyze.get_player_all_time_stats(last_name, first_name, team)
-    assert stats.passing_att == 4082
-    assert stats.rushing_att == 131
-    assert stats.passing_yds == 31097
+    assert getattr(stats, 'passing_att') == 3815
+    assert getattr(stats, 'rushing_att') == 129
+    assert getattr(stats, 'passing_yds') == 29053
+
+def test_get_player_stats_for_year():
+    first_name = 'Eli'
+    last_name = 'Manning'
+    team = 'NYG'
+    year = 2015
+    stats = nflanalyze.get_player_stats_for_year(last_name, first_name, team, year)
+    assert getattr(stats, 'offense_tds') == 35
+    assert getattr(stats, 'passing_int') == 14
 
 def test_get_team_roster():
     team = 'NO'

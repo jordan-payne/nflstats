@@ -56,12 +56,17 @@ def to_basic_obj(obj):
             if f == 'status' or f == 'position':
                 collection[f] = str(getattr(obj, f))
             else:
-                collection[f] = getattr(obj, f)
+                v = getattr(obj, f)
+                if v != 0:
+                    collection[f] = v
+                else:
+                    continue
     except AttributeError:
         try:
             collection = {}
             for i in obj:
                 if i != 'status':
+                    print obj[i]
                     collection[i] = obj[i]
                 if i == 'status':
                     collection[i] = str(obj[i])
