@@ -77,7 +77,6 @@ def extract_fields(obj):
             if type(o) is nfldb.types.Player:
                 obj[i] = dict((f, str(getattr(o, f))) for f in o.sql_fields())
             else:
-                print vars(o)
                 obj[i] = dict((f, str(getattr(o, f))) for f in o.fields)
                 for k,v in vars(o).iteritems():
                     obj[i][k] = str(v)

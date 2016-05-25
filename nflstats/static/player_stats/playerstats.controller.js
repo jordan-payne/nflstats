@@ -30,7 +30,6 @@
       });
       $http.post('/get_player_all_time_stats_by_year', player)
         .then(function successCallback(response) {
-          console.log(_.keys(response.data[0]))
           vm.gridOptions.data = _.values(response.data)
       }, function errorCallback(response) {
           vm.stats = response.data;

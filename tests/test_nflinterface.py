@@ -56,7 +56,7 @@ def test_get_player_all_time_stats_by_year(client):
     response = client.post('/get_player_all_time_stats_by_year', data=json.dumps(payload))
     json_data = json.loads(response.data)
     assert json_data[6]['passing_tds'] == '35'
-    assert json_data[6]['year'] == '2015'
+    assert json_data[6]['year'] == '2016'
 
 def test_get_team_roster(client):
     payload = {

@@ -56,9 +56,13 @@ def get_player_all_time_stats_by_year(last_name, first_name, team):
         q = nfldb.Query(dbc)
         q.game(season_year=year, season_type=['Regular', 'Postseason'])
         q.play_player(player_id=player['player_id'])
-        result = q.limit(1).as_aggregate()[0]
-        result.year = year
-        results.append(result)
+        try:
+            result = q.limit(1).as_aggregate()[0]
+        except IndexError:
+            continue
+        else:
+            result.year = year
+            results.append(result)
     return results
 
 def get_team_roster(team):
