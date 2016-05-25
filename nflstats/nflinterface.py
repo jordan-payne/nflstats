@@ -1,6 +1,5 @@
-#!/usr/bin/env python
-
 import nflanalyze
+import nfldb
 
 from flask import Flask
 from flask import render_template
@@ -46,38 +45,45 @@ def get_team_roster():
     roster = nflanalyze.get_team_roster(team)
     return to_json(roster)
 
+@app.route('/get_player_stats_for_year', methods=['POST'])
+def get_player_stats_for_year():
+    payload = json.loads(request.data)
+    last_name = payload['last_name']
+    first_name = payload['first_name']
+    team = payload['team']
+    year = payload['year']
+    stats = nflanalyze.get_player_stats_for_year(last_name, first_name, team, year)
+    if stats == None:
+        return nflanalyze.to_json({'message': 'not found'})
+    return to_json(stats)
+
+@app.route('/get_player_all_time_stats_by_year', methods=['POST'])
+def get_player_all_time_stats_by_year():
+    payload = json.loads(request.data)
+    last_name = payload['last_name']
+    first_name = payload['first_name']
+    team = payload['team']
+    years = nflanalyze.get_player_all_time_stats_by_year(last_name, first_name, team)
+    if years == None:
+        return nflanalyze.to_json({'message': 'not found'})
+    return to_json(years)
+
 def to_json(obj):
-    return json.dumps(to_basic_obj(obj))
+    return json.dumps(extract_fields(obj))
 
-def to_basic_obj(obj):
-    try:
-        collection = {}
-        for f in obj.sql_fields():
-            if f == 'status' or f == 'position':
-                collection[f] = str(getattr(obj, f))
+def extract_fields(obj):
+    if type(obj) is list:
+        for i,o in enumerate(obj):
+            if type(o) is nfldb.types.Player:
+                obj[i] = dict((f, str(getattr(o, f))) for f in o.sql_fields())
             else:
-                v = getattr(obj, f)
-                if v != 0:
-                    collection[f] = v
-                else:
-                    continue
-    except AttributeError:
-        try:
-            collection = {}
-            for i in obj:
-                if i != 'status':
-                    print obj[i]
-                    collection[i] = obj[i]
-                if i == 'status':
-                    collection[i] = str(obj[i])
-                if i == 'position':
-                    collection[i] = str(obj[i])
-        except TypeError:
-            collection = []
-            for o in obj:
-                collection.append(to_basic_obj(o))
-    return collection
-
+                print vars(o)
+                obj[i] = dict((f, str(getattr(o, f))) for f in o.fields)
+                for k,v in vars(o).iteritems():
+                    obj[i][k] = str(v)
+    else:
+        obj = dict((f, str(obj[f])) for f in obj)
+    return obj
 
 if __name__ == "__main__":
     app.run()

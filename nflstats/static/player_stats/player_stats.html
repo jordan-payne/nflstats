@@ -9,8 +9,4 @@
   </select>
   <input type="submit" value="Get Player"/>
 </form>
-Player: {{players.player}}</br>
-Stats: {{players.stats}}</br>
-Touchdowns: {{players.stats['offense_tds']}}</br>
-Interceptions:</br>
-Yards:</br>
+<div ui-grid="players.gridOptions" class="grid" ui-grid-pinning ui-grid-resize-columns ui-grid-auto-resize></div>

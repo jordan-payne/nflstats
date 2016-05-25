@@ -40,14 +40,26 @@ def get_player_all_time_stats(last_name, first_name, team):
     # Only have 2009 onwards :(
     q.game(season_year=range(2009, 2016), season_type=['Regular', 'Postseason'])
     q.play_player(player_id=player['player_id'])
-    return q.limit(1).as_aggregate()[0]
+    return q.limit(1).as_aggregate()
 
 def get_player_stats_for_year(last_name, first_name, team, year):
     player = get_player(last_name, first_name, team)
     q = nfldb.Query(dbc)
     q.game(season_year=year, season_type=['Regular', 'Postseason'])
     q.play_player(player_id=player['player_id'])
-    return q.limit(1).as_aggregate()[0]
+    return q.limit(1).as_aggregate()
+
+def get_player_all_time_stats_by_year(last_name, first_name, team):
+    player = get_player(last_name, first_name, team)
+    results = []
+    for year in range(2009, 2016):
+        q = nfldb.Query(dbc)
+        q.game(season_year=year, season_type=['Regular', 'Postseason'])
+        q.play_player(player_id=player['player_id'])
+        result = q.limit(1).as_aggregate()[0]
+        result.year = year
+        results.append(result)
+    return results
 
 def get_team_roster(team):
     q = nfldb.Query(dbc)

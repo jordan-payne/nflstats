@@ -16,7 +16,6 @@ def test_app():
 
 def test_home(client):
     response = client.get('/', follow_redirects=True)
-    print response.data
     assert b'nflstats' in response.data
 
 def test_get_player(client):
@@ -37,8 +36,28 @@ def test_get_player_all_time_stats(client):
         'team':'NYG'}
     response = client.post('/get_player_all_time_stats', data=json.dumps(payload))
     json_data = json.loads(response.data)
-    assert json_data['offense_tds'] == 207
-    
+    assert json_data[0]['passing_tds'] == '205'
+
+def test_get_player_stats_for_year(client):
+    payload = {
+        'last_name':'Manning',
+        'first_name':'Eli',
+        'team':'NYG',
+        'year': 2015}
+    response = client.post('/get_player_stats_for_year', data=json.dumps(payload))
+    json_data = json.loads(response.data)
+    assert json_data[0]['passing_tds'] == '35'
+
+def test_get_player_all_time_stats_by_year(client):
+    payload = {
+        'last_name':'Manning',
+        'first_name':'Eli',
+        'team':'NYG'}
+    response = client.post('/get_player_all_time_stats_by_year', data=json.dumps(payload))
+    json_data = json.loads(response.data)
+    assert json_data[6]['passing_tds'] == '35'
+    assert json_data[6]['year'] == '2015'
+
 def test_get_team_roster(client):
     payload = {
         'team': 'NO'
