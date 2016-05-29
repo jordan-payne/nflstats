@@ -68,6 +68,13 @@ def get_player_all_time_stats_by_year():
         return nflanalyze.to_json({'message': 'not found'})
     return to_json(years)
 
+@app.route('/fuzzy_player_search', methods=['POST'])
+def fuzzy_player_search():
+    payload = json.loads(request.data)
+    name = payload['name']
+    players = nflanalyze.fuzzy_search(name)
+    return to_json(players)
+
 def to_json(obj):
     return json.dumps(extract_fields(obj))
 
@@ -75,13 +82,24 @@ def extract_fields(obj):
     if type(obj) is list:
         for i,o in enumerate(obj):
             if type(o) is nfldb.types.Player:
-                obj[i] = dict((f, str(getattr(o, f))) for f in o.sql_fields())
+                obj[i] = convert_player(o)
+            elif type(o) is tuple:
+                obj[i] = convert_player(o[0])
             else:
-                obj[i] = dict((f, str(getattr(o, f))) for f in o.fields)
+                obj[i] = dict((f, getattr(o, f)) for f in o.fields)
                 for k,v in vars(o).iteritems():
-                    obj[i][k] = str(v)
+                    obj[i][k] = v
     else:
-        obj = dict((f, str(obj[f])) for f in obj)
+        if type(obj) is nfldb.types.Player:
+            obj = convert_player(obj)
+        else:
+            obj = dict((f, str(obj[f])) for f in obj)
+    return obj
+
+def convert_player(player):
+    obj = dict((f, getattr(player, f)) for f in player.sql_fields())
+    obj['position'] = str(getattr(player, 'position'))
+    obj['status'] = str(getattr(player, 'status'))
     return obj
 
 if __name__ == "__main__":

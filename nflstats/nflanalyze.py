@@ -16,8 +16,8 @@ def get_all_teams():
 def get_stats_categories():
     return nfldb.stat_categories
 
-def fuzzy_search(name, limit=1, team=None, position=None):
-    return nfldb.player_search(dbc, name, limit=limit, team=team, position=position)
+def fuzzy_search(name):
+    return nfldb.player_search(dbc, name, limit=30, team=None, position=None)
 
 def get_player(last_name, first_name, team):
     with nfldb.Tx(dbc) as cursor:
@@ -34,10 +34,12 @@ def get_player(last_name, first_name, team):
         else:
             return player
 
+def get_player_from_id(id):
+    return nfldb.Player.from_id(dbc, id)
+
 def get_player_all_time_stats(last_name, first_name, team):
     player = get_player(last_name, first_name, team)
     q = nfldb.Query(dbc)
-    # Only have 2009 onwards :(
     q.game(season_year=range(2009, 2016), season_type=['Regular', 'Postseason'])
     q.play_player(player_id=player['player_id'])
     return q.limit(1).as_aggregate()

@@ -36,7 +36,7 @@ def test_get_player_all_time_stats(client):
         'team':'NYG'}
     response = client.post('/get_player_all_time_stats', data=json.dumps(payload))
     json_data = json.loads(response.data)
-    assert json_data[0]['passing_tds'] == '205'
+    assert json_data[0]['passing_tds'] == 205
 
 def test_get_player_stats_for_year(client):
     payload = {
@@ -46,7 +46,7 @@ def test_get_player_stats_for_year(client):
         'year': 2015}
     response = client.post('/get_player_stats_for_year', data=json.dumps(payload))
     json_data = json.loads(response.data)
-    assert json_data[0]['passing_tds'] == '35'
+    assert json_data[0]['passing_tds'] == 35
 
 def test_get_player_all_time_stats_by_year(client):
     payload = {
@@ -55,8 +55,8 @@ def test_get_player_all_time_stats_by_year(client):
         'team':'NYG'}
     response = client.post('/get_player_all_time_stats_by_year', data=json.dumps(payload))
     json_data = json.loads(response.data)
-    assert json_data[6]['passing_tds'] == '35'
-    assert json_data[6]['year'] == '2016'
+    assert json_data[6]['passing_tds'] == 35
+    assert json_data[6]['year'] == 2015
 
 def test_get_team_roster(client):
     payload = {
@@ -66,3 +66,11 @@ def test_get_team_roster(client):
     roster = json.loads(response.data)
     assert roster[0]['team'] == 'NO'
     assert roster[0]['status'] == 'Active'
+
+def test_fuzzy_player_search(client):
+    payload = {
+        'name': 'peyton Mannz'
+    }
+    response = client.post('/fuzzy_player_search', data=json.dumps(payload))
+    players = json.loads(response.data)
+    assert players[0]['full_name'] == 'Peyton Manning'

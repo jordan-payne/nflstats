@@ -58,3 +58,13 @@ def test_get_team_roster():
     players = nflanalyze.get_team_roster(team)
     assert players[0].team == 'NO'
     assert str(players[0].status) == 'Active'
+
+def test_fuzzy_search():
+    name = 'peyton Mannz'
+    players = nflanalyze.fuzzy_search(name)
+    assert players[0][0].full_name == 'Peyton Manning'
+
+def test_get_player_from_id():
+    id = '00-0027685'
+    player = nflanalyze.get_player_from_id(id)
+    assert player.first_name == 'Emmanuel'
