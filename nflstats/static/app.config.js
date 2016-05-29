@@ -13,7 +13,8 @@
     $stateProvider
       .state('home', {
         url: '/',
-        templateUrl: 'index.html'
+        templateUrl: 'index.html',
+        controller: 'IndexController as index'
       })
       .state('roster', {
         url: '/roster',

@@ -67,6 +67,14 @@ def get_player_all_time_stats_by_year(last_name, first_name, team):
             results.append(result)
     return results
 
+def get_all_names():
+    with nfldb.Tx(dbc) as cursor:
+        cursor.execute(
+            '''SELECT DISTINCT ON (full_name) full_name FROM player''')
+        names = cursor.fetchall()
+        return names
+
+
 def get_team_roster(team):
     q = nfldb.Query(dbc)
     players = q.player(team=team, status='Active').as_players()

@@ -5,6 +5,7 @@
       <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/angular-ui/bower-ui-grid/master/ui-grid.min.css">
       <link rel="stylesheet" type="text/css" href="main.css">
       <script src='angular.js'></script>
+      <script src='bootstrap.ui.js'></script>
       <script src='ui-grid.min.js'></script>
       <script src='router.min.js'></script>
       <script src='lodash.js'></script>
@@ -13,11 +14,14 @@
       <script src='app.constants.js'></script>
       <script src='roster/roster.controller.js'></script>
       <script src='player_stats/playerstats.controller.js'></script>
+      <script src='index/index.controller.js'></script>
   </head>
   <body>
     <div ui-view>
       <a ui-sref='roster'>Rosters</a><br/>
       <a ui-sref='player_stats'>Player Statistics</a>
+      <h4>Find Player</h4>
+      <input type="text" ng-model="selected" uib-typeahead="name for name in index.names | filter:$viewValue | limitTo:15" class="form-control">
     </div>
   </body>
 </html>

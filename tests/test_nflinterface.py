@@ -74,3 +74,8 @@ def test_fuzzy_player_search(client):
     response = client.post('/fuzzy_player_search', data=json.dumps(payload))
     players = json.loads(response.data)
     assert players[0]['full_name'] == 'Peyton Manning'
+
+def test_get_all_names(client):
+    response = client.post('/get_all_names')
+    names = json.loads(response.data)
+    assert len(names) == 6510

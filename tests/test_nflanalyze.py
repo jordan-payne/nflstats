@@ -68,3 +68,7 @@ def test_get_player_from_id():
     id = '00-0027685'
     player = nflanalyze.get_player_from_id(id)
     assert player.first_name == 'Emmanuel'
+
+def test_get_all_names():
+    names = nflanalyze.get_all_names()
+    assert len(names) == 6510

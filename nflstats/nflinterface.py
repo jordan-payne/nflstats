@@ -1,5 +1,6 @@
 import nflanalyze
 import nfldb
+import psycopg2
 
 from flask import Flask
 from flask import render_template
@@ -75,6 +76,11 @@ def fuzzy_player_search():
     players = nflanalyze.fuzzy_search(name)
     return to_json(players)
 
+@app.route('/get_all_names', methods=['POST'])
+def get_all_names():
+    names = nflanalyze.get_all_names()
+    return to_json(names)
+
 def to_json(obj):
     return json.dumps(extract_fields(obj))
 
@@ -85,6 +91,8 @@ def extract_fields(obj):
                 obj[i] = convert_player(o)
             elif type(o) is tuple:
                 obj[i] = convert_player(o[0])
+            elif type(o) is psycopg2.extras.RealDictRow:
+                continue
             else:
                 obj[i] = dict((f, getattr(o, f)) for f in o.fields)
                 for k,v in vars(o).iteritems():
@@ -97,7 +105,7 @@ def extract_fields(obj):
     return obj
 
 def convert_player(player):
-    obj = dict((f, getattr(player, f)) for f in player.sql_fields())
+    obj = dict((f, getattr(player, f)) for f in player.sql_fields() if getattr(player, f) != None)
     obj['position'] = str(getattr(player, 'position'))
     obj['status'] = str(getattr(player, 'status'))
     return obj

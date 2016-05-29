@@ -3,6 +3,7 @@
 
   angular
     .module('nflstats', [
+      'ui.bootstrap',
       'ui.router',
       'ui.grid',
       'ui.grid.pinning',
