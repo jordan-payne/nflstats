@@ -31,9 +31,8 @@ def test_get_player(client):
 
 def test_get_player_all_time_stats(client):
     payload = {
-        'last_name':'Manning',
-        'first_name':'Eli',
-        'team':'NYG'}
+        'id':'00-0022803'
+    }
     response = client.post('/get_player_all_time_stats', data=json.dumps(payload))
     json_data = json.loads(response.data)
     assert json_data[0]['passing_tds'] == 205
@@ -50,11 +49,11 @@ def test_get_player_stats_for_year(client):
 
 def test_get_player_all_time_stats_by_year(client):
     payload = {
-        'last_name':'Manning',
-        'first_name':'Eli',
-        'team':'NYG'}
+        'id':'00-0022803'
+    }
     response = client.post('/get_player_all_time_stats_by_year', data=json.dumps(payload))
     json_data = json.loads(response.data)
+    print len(json_data)
     assert json_data[6]['passing_tds'] == 35
     assert json_data[6]['year'] == 2015
 
@@ -78,4 +77,12 @@ def test_fuzzy_player_search(client):
 def test_get_all_names(client):
     response = client.post('/get_all_names')
     names = json.loads(response.data)
-    assert len(names) == 6510
+    assert len(names) == 6778
+
+def test_get_player_from_id(client):
+    payload = {
+        'id': '00-0027685'
+    }
+    response = client.post('/get_player_from_id', data=json.dumps(payload))
+    player = json.loads(response.data)
+    assert player['first_name'] == 'Emmanuel'

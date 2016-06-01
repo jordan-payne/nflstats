@@ -17,6 +17,13 @@ app = Flask(__name__)
 def index():
     return redirect(url_for('static', filename='index.html'))
 
+@app.route('/get_player_from_id', methods=['POST'])
+def get_player_from_id():
+    payload = json.loads(request.data)
+    id = payload['id']
+    player = nflanalyze.get_player_from_id(id)
+    return to_json(player)
+
 @app.route('/get_player', methods=['POST'])
 def get_player():
     payload = json.loads(request.data)
@@ -31,10 +38,8 @@ def get_player():
 @app.route('/get_player_all_time_stats', methods=['POST'])
 def get_player_all_time_stats():
     payload = json.loads(request.data)
-    last_name = payload['last_name']
-    first_name = payload['first_name']
-    team = payload['team']
-    stats = nflanalyze.get_player_all_time_stats(last_name, first_name, team)
+    id = payload['id']
+    stats = nflanalyze.get_player_all_time_stats(id)
     if stats == None:
         return nflanalyze.to_json({'message': 'not found'})
     return to_json(stats)
@@ -61,10 +66,8 @@ def get_player_stats_for_year():
 @app.route('/get_player_all_time_stats_by_year', methods=['POST'])
 def get_player_all_time_stats_by_year():
     payload = json.loads(request.data)
-    last_name = payload['last_name']
-    first_name = payload['first_name']
-    team = payload['team']
-    years = nflanalyze.get_player_all_time_stats_by_year(last_name, first_name, team)
+    id = payload['id']
+    years = nflanalyze.get_player_all_time_stats_by_year(id)
     if years == None:
         return nflanalyze.to_json({'message': 'not found'})
     return to_json(years)
@@ -79,6 +82,7 @@ def fuzzy_player_search():
 @app.route('/get_all_names', methods=['POST'])
 def get_all_names():
     names = nflanalyze.get_all_names()
+    names = [{'name': '%s, %s, %s' % (name['full_name'], name['position'], name['team']), 'id': name['player_id']} for name in names]
     return to_json(names)
 
 def to_json(obj):
@@ -92,6 +96,10 @@ def extract_fields(obj):
             elif type(o) is tuple:
                 obj[i] = convert_player(o[0])
             elif type(o) is psycopg2.extras.RealDictRow:
+                continue
+            elif type(o) is str:
+                continue
+            elif type(o) is dict:
                 continue
             else:
                 obj[i] = dict((f, getattr(o, f)) for f in o.fields)

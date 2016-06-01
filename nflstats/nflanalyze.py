@@ -37,11 +37,10 @@ def get_player(last_name, first_name, team):
 def get_player_from_id(id):
     return nfldb.Player.from_id(dbc, id)
 
-def get_player_all_time_stats(last_name, first_name, team):
-    player = get_player(last_name, first_name, team)
+def get_player_all_time_stats(id):
     q = nfldb.Query(dbc)
     q.game(season_year=range(2009, 2016), season_type=['Regular', 'Postseason'])
-    q.play_player(player_id=player['player_id'])
+    q.play_player(player_id=id)
     return q.limit(1).as_aggregate()
 
 def get_player_stats_for_year(last_name, first_name, team, year):
@@ -51,13 +50,12 @@ def get_player_stats_for_year(last_name, first_name, team, year):
     q.play_player(player_id=player['player_id'])
     return q.limit(1).as_aggregate()
 
-def get_player_all_time_stats_by_year(last_name, first_name, team):
-    player = get_player(last_name, first_name, team)
+def get_player_all_time_stats_by_year(id):
     results = []
     for year in range(2009, 2016):
         q = nfldb.Query(dbc)
         q.game(season_year=year, season_type=['Regular', 'Postseason'])
-        q.play_player(player_id=player['player_id'])
+        q.play_player(player_id=id)
         try:
             result = q.limit(1).as_aggregate()[0]
         except IndexError:
@@ -70,7 +68,7 @@ def get_player_all_time_stats_by_year(last_name, first_name, team):
 def get_all_names():
     with nfldb.Tx(dbc) as cursor:
         cursor.execute(
-            '''SELECT DISTINCT ON (full_name) full_name FROM player''')
+            '''SELECT full_name, team, cast(position as varchar(20)), player_id FROM player''')
         names = cursor.fetchall()
         return names
 

@@ -1,12 +1,47 @@
 <!-- partials/player_stats.html -->
-<form ng-submit='players.getPlayer(player)'>
-  <input type="text" ng-model='player.first_name' placeholder='First Name'/>
-  <input type="text" ng-model='player.last_name' placeholder='Last Name'/>
-  <select type="text" ng-model='player.team'/>
-    <option ng-repeat="option in players.teams" value="{{option.id}}">
-      {{::option.name}}
-    </option>
-  </select>
-  <input type="submit" value="Get Player"/>
-</form>
-<div ui-grid="players.gridOptions" class="grid" ui-grid-pinning ui-grid-resize-columns ui-grid-auto-resize></div>
+<div class="row">
+  <div class="col-md-4">
+    <form ng-submit='players.getPlayer(selected)'>
+      <div class="form-group">
+        <br/>
+        <input
+          placeholder="Name"
+          class="form-control"
+          type="text"
+          ng-model="selected"
+          uib-typeahead="name for name in players.names | filter:$viewValue | limitTo:15"/>
+      </div>
+      <button type="submit" class="btn btn-primary">Get Player</button>
+    </form>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5">
+  <h2>Passing</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div
+        ui-grid="players.passingGridOptions"
+        class="grid"
+        ui-grid-pinning
+        ui-grid-resize-columns
+        ui-grid-auto-resize></div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-5">
+  <h2>Rushing</h2>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div
+        ui-grid="players.rushingGridOptions"
+        class="grid"
+        ui-grid-pinning
+        ui-grid-resize-columns
+        ui-grid-auto-resize></div>
+  </div>
+</div>

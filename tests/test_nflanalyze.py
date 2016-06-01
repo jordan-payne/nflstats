@@ -28,10 +28,8 @@ def test_get_player():
     assert player['team'] == team
 
 def test_get_player_all_time_stats():
-    first_name = 'Peyton'
-    last_name = 'Manning'
-    team = 'UNK'
-    stats = nflanalyze.get_player_all_time_stats(last_name, first_name, team)
+    id = '00-0010346'
+    stats = nflanalyze.get_player_all_time_stats(id)
     assert getattr(stats[0], 'passing_att') == 3815
     assert getattr(stats[0], 'rushing_att') == 129
     assert getattr(stats[0], 'passing_yds') == 29053
@@ -46,10 +44,8 @@ def test_get_player_stats_for_year():
     assert getattr(stats[0], 'passing_int') == 14
 
 def test_get_player_all_time_stats_by_year():
-    first_name = 'Eli'
-    last_name = 'Manning'
-    team = 'NYG'
-    years = nflanalyze.get_player_all_time_stats_by_year(last_name, first_name, team)
+    id = '00-0022803'
+    years = nflanalyze.get_player_all_time_stats_by_year(id)
     assert len(years) == 7
     assert getattr(years[6], 'offense_tds') == 35
 
@@ -71,4 +67,4 @@ def test_get_player_from_id():
 
 def test_get_all_names():
     names = nflanalyze.get_all_names()
-    assert len(names) == 6510
+    assert len(names) == 6778
